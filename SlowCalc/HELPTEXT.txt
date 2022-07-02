@@ -1,0 +1,637 @@
+!  This file is part of SlowCalc.
+!
+!  Copyright (C) 2010 Thomas DiModica <ricinwich@yahoo.com>
+!
+!  This program is free software: you can redistribute it and/or modify
+!  it under the terms of the GNU General Public License as published by
+!  the Free Software Foundation, either version 3 of the License, or
+!  (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License
+!  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+!
+!  File: HELPTEXT.txt
+!
+! On-line Help System File:
+! Format:
+!	Lines that begin with '!' are comments.
+!	Lines that begin with # have topics on them.
+!		The lines following are the help text to print.
+!		Print until a line that begins with %.
+!	The first lines up to the first % are printed when the help
+!		system starts.
+!	The line that begins with & marks the end of topics.
+!		The lines following until a line begining with %
+!		are the "no help for topic" message that is printed.
+!
+Type 'basic' to get basic help, 'operators' to get help on operators,
+'functions' to get help on functions, 'operations' to get help on stack
+manipulating operations, or type the function or operator you wish to get help
+on.
+Type 'quit' to quit help.
+%
+
+
+
+#basic
+This is a reverse-Polish notation calculator, which means you enter the
+numbers, then the function that you wish to perform on them. Enter numbers
+either in scientific notation or standard notation. Numbers can be as long as
+256 digits, or as short as 8. Numbers longer or shorter will be rounded down
+or lengthened as necessary. Type 'numbers' for more information on numbers.
+
+The only truly unintuitive behavior of this calculator is the requirement of
+typing 'print' to see the result of each calculation.
+%
+
+#numbers
+This calculator uses floating point numbers stored internally in base ten,
+which is inefficient and slow. It stores only as many digits of precision as
+the length of the number: input length determines precision. Numbers can be
+input as normal numbers, in scientific notation, or as scaled numbers (not an
+intended feature). The calculator operates on normalized significand-exponent
+floating point numbers with an exponent range of negative one billion to one
+billion (not a binary billion: one decimal billion). Overflows are flushed to
+infinity, and underflows are flushed to zero. There is no gradual underflow,
+as an exponent range of negative one billion should not necessitate it.
+%
+
+
+
+#operators
+This calculator supports these basic operators:
+ + addition
+ - subtraction
+ * multiplication
+ / division
+ % remainder
+ ^ exponentiation
+
+They pop their arguments off of the stack, with the second item on the stack
+the left-side argument. The length of the result is that of the longest
+argument. The left-side argument's rounding mode is used and the result
+inherits this rounding mode.
+%
+
+#+
+#addition
+   Addition:
+Pops the top two items off of the stack, adds them, then pushes the sum back
+onto the stack.
+%
+
+#-
+#subtraction
+   Subtraction:
+Pops the top two items off of the stack, subtracts the first item popped off
+from the second item popped off, then pushes the difference back onto the
+stack.
+%
+
+#*
+#multiplication
+   Multiplication:
+Pops the top two items off of the stack, multiplies them, then pushes the
+product back onto the stack.
+%
+
+#/
+#division
+   Division:
+Pops the top two items off of the stack, divides the second item popped off
+by the first item popped off, then pushes the quotient back onto the stack.
+%
+
+#%
+#remainder
+   Remainder:
+Pops the top two items off of the stack, divides the second item popped off
+by the first item popped off. The quotient is then truncated to an integer,
+multiplied by the first item popped off, and the product is subtracted from
+the second item popped off. This difference is then pushed back onto the
+stack.
+%
+
+#^
+#exponentiation
+   Exponentiation:
+Pops the top two items off of the stack, takes the second item popped off to
+the power of the first item popped off, then pushes the result back onto the
+stack.
+
+Exponentiation expands a ^ u to exp(u * ln(a)). For '-a', this results in a
+NaN result without regard to the value of 'u'. It has not been programmed to
+handle negative numbers to integer powers, or powers that can be expressed as
+rational numbers with an odd denominator. Sorry.
+%
+
+
+
+#functions
+   Functions that this calculator currently supports:
+abs      - absolute value               lengthen - lengthen number
+acos     - principle inverse cosine     ln       - natural logarithm
+acosh    - inverse hyperbolic cosine    log      - common logarithm
+alog     - common antilogarithm         mac      - fused multiply-accumulate
+asin     - principle inverse sine       neg      - negate
+asinh    - inverse hyperbolic sine      rand     - generate random number
+atan     - principle inverse tangent    roundd   - round at digit
+atan2    - two-argument inverse tangent roundp   - round at place
+atanh    - inverse hyperbolic tangent   sin      - sine
+cos      - cosine                       sinh     - hyperbolic sine
+cosh     - hyperbolic cosine            shorten  - shorten number, rounding
+cubrt    - cube root                    sqr      - square
+exp      - exponential                  sqrt     - square root
+fact     - factorial                    tan      - tangent
+frac     - fractional component         tanh     - hyperbolic tangent
+int      - integer                      truncate - shorten number, truncating
+
+All functions pop their arguments off of the stack, operate on them, then push
+the result back onto the stack.
+%
+
+#abs
+   abs:
+Absolute Value.
+%
+
+#acos
+   acos:
+Principle inverse cosine:
+   Domain: [-1,1]
+   Range: [0,pi]
+%
+
+#acosh
+   acosh:
+Principle inverse hyperbolic cosine:
+   Domain: [1, inf)
+Returns only the positive result of this double valued function.
+%
+
+#alog
+   alog:
+Common antilogarithm, that is, ten raised to the argument power.
+This can be quite slow for large numbers.
+%
+
+#asin
+   asin:
+Principle inverse sine:
+   Domain: [-1,1]
+   Range: [-pi/2,pi/2]
+%
+
+#asinh
+   asinh:
+Inverse hyperbolic sine.
+%
+
+#atan
+   atan:
+Principle inverse tangent:
+   Range: [-pi/2,pi/2]
+%
+
+#atan2
+   atan2:
+Two-argument principle inverse tangent:
+   Range: [-pi,pi]
+Takes the inverse tangent of the second item on the stack divided by the first
+item on the stack, putting the result in the correct principle quadrant.
+This function is designed to facilitate the processing of complex numbers.
+%
+
+#atanh
+   atanh:
+Inverse hyperbolic tangent:
+   Domain: (-1,1)
+%
+
+#cos
+   cos:
+Cosine. Sine and Cosine have to reduce their argument, which takes time. The
+farther a number is from zero, the longer this will take. Numbers < 10 ^ 31
+will be reduced mod 2pi. Larger numbers will be reduced to this point, and
+then a different strategy will be used. This will be very inaccurate for short
+numbers, and will have limited accuracy for even very long numbers.
+For all numbers, a minimum of (length + 6 - exponent) digits will be accurate.
+%
+
+#cosh
+   cosh:
+Hyperbolic Cosine.
+This can be quite slow for large numbers.
+%
+
+#cubrt
+   cubrt:
+Cube root. Unlike the exponentiation operator, cube root will correctly take
+the cube root of a negative number.
+%
+
+#exp
+   exp:
+Exponential function, that is Euler's constant raised to the argument power.
+This can be quite slow for large numbers.
+%
+
+#fact
+   fact:
+Factorial. Invokes "int" on its argument.
+Computes n * (n - 1) * (n - 2) * ... * 2 * 1.
+%
+
+#frac
+   frac:
+Fractional component. Returns the value of a number to the right of the
+decimal point. Example: frac(10.95) = .95.
+%
+
+#int
+   int:
+Integer component. Returns the integral part of a number, the part to the left
+of the decimal point, truncating the rest. Example: int(10.95) = 10.
+Use 'roundp -1' to ROUND to an integer.
+%
+
+#lengthen
+   lengthen:
+Lengthens a number. Type 'lengthen #', where # is the number of extra digits
+to add to the length. This is useful for adding precision to computations.
+%
+
+#ln
+   ln:
+Natural logarithm.
+   Domain: (0, inf)
+%
+
+#log
+   log:
+Common logarithm, that is, base ten logarithm.
+   Domain: (0, inf)
+%
+
+#mac
+   mac:
+Fused multiply-accumulate. Pops three arguments off of the stack. The second
+and third are multiplied together and the first is then added to the product.
+This is all done with extra precision so that the result does not suffer a
+round-off error between multiplication and addition.
+%
+
+#neg
+   neg:
+Negate top of stack.
+%
+
+#rand
+   rand:
+Generate a pseudo-random number. This calculator uses a linear-congruential
+generator with the following constants [x = (a * x + c) % m]:
+   a = 4 * 5 * 32771 ^ 53 * 65537 ^ 3 + 1
+   c = 65537 ^ 53
+   m = 10 ^ 256
+It then divides the result by 10 ^ 256 to return a value in [0, 1).
+%
+
+#roundd
+   roundd:
+Round to a specific digit. Digits begin at 1 and go to length.
+Invalid input is ignored.
+%
+
+#roundp
+   roundp:
+Round at a specific decimal place. Indicate the decimal place with its power
+of ten. So, 'roundp -1' rounds at the tenths place to the ones place, and
+effectively rounds the number to an integer using the current round mode.
+Invalid input is ignored.
+%
+
+#sin
+   sin:
+Sine. Sine and Cosine have to reduce their argument, which takes time. The
+farther a number is from zero, the longer this will take. Numbers < 10 ^ 31
+will be reduced mod 2pi. Larger numbers will be reduced to this point, and
+then a different strategy will be used. This will be very inaccurate for short
+numbers, and will have limited accuracy for even very long numbers.
+For all numbers, a minimum of (length + 6 - exponent) digits will be accurate.
+%
+
+#sinh
+   sinh:
+Hyperbolic Sine.
+This can be quite slow for large numbers.
+%
+
+#shorten
+   shorten:
+Shortens a number. Type 'shorten #', where # is the number of digits to remove
+from the length. Shorten rounds the number before shortening it.
+%
+
+#sqr
+   sqr:
+Square top of stack. This is done with a multiplication, so it is faster than
+x ^ 2. It also does not fail for a negative number.
+%
+
+#sqrt
+   sqrt:
+Square root.
+Note: sqrt(-0) = -0.
+%
+
+#tan
+   tan:
+Tangent.
+Uses tan(x) = sin(x) / cos(x). Sine and Cosine have to reduce their argument,
+which takes time. The farther a number is from zero, the longer this will
+take. Numbers < 10 ^ 31 will be reduced mod 2pi. Larger numbers will be
+reduced to this point, and then a different strategy will be used. This will
+be very inaccurate for short numbers, and will have limited accuracy for even
+very long numbers.
+For all numbers, a minimum of (length + 6 - exponent) digits will be accurate.
+%
+
+#tanh
+   tanh:
+Hyperbolic Tangent.
+Uses tanh(x) = sinh(x) / cosh(x). This can be quite slow for large numbers.
+%
+
+#truncate
+   truncate:
+Shortens a number. Type 'truncate #', where # is the number of digits to
+remove from the length. Truncate, as its name implies, does not round the
+number.
+%
+
+
+
+#operations
+   Stack manipulating operations supported by this calculator:
+copy     - copy top of stack
+pop      - pop top of stack off
+flush    - clear the current stack
+flushall - clear all stacks
+swap     - swap the top two items on the stack
+rot      - rotate the top three items on the stack
+print    - print the top item on the stack
+Print    - print the top item on the stack, then pop it off
+mode     - change stack round mode
+stack    - change working stack
+pushto   - push top of stack to a different stack
+popto    - pop top of stack to a different stack
+pushfrom - pull top of a different stack onto current stack
+popfrom  - pop top of a different stack onto current stack
+pi       - pi with length 32
+Pi       - pi with length 128
+PI       - pi with length 256
+%
+
+#copy
+   copy:
+Pushes a copy of the top item of the stack onto the stack.
+It can be thought of as pop the top item of the stack and push it back on
+twice. (This may be how some RPN calculators achieve this, not this one.)
+Afterwards, the top two items on the stack will be the same.
+%
+
+#pop
+   pop:
+Pops the top item off of the stack and discards it. This is useful if that
+number will no longer be used in computations and does not need to be reused.
+%
+
+#flush
+   flush:
+Clear the entire contents of the current stack.
+%
+
+#flushall
+   flushall:
+Clear the contents of all stacks.
+%
+
+#swap
+   swap:
+Swaps the top two items on the stack:
+   A        B
+   B   ->   A
+   C        C
+%
+
+#rot
+   rot:
+Rotates the top three items on the stack:
+   A        B
+   B   ->   C
+   C        A
+%
+
+#print
+   print:
+Prints the value of the top item on the stack. The calculator doesn't
+automatically echo the value on the top of the stack to allow it to be used
+in a script to generate a single output instead of the outputs of every step
+of a complex mathematical transformation.
+%
+
+#Print
+   Print:
+Prints out the value of the top item on the stack, then pops it off of the
+stack. Sometimes, you only need a number once, and it is nice to have a
+shortcut to print it then pop it.
+%
+
+#mode
+   mode:
+This calculator supports eight rounding modes:
+   The four modes of IEEE 754-1985:
+      ROUND_TO_NEAREST_TIES_TO_EVEN
+      ROUND_TO_POSITIVE_INFINITY
+      ROUND_TO_NEGATIVE_INFINITY
+      ROUND_TO_ZERO
+   The mode added in IEEE 754-2008:
+      ROUND_TO_NEAREST_TIES_AWAY_FROM_ZERO
+   Finally, three added for symmetry to those above:
+      ROUND_TO_NEAREST_TIES_TO_ODD
+      ROUND_AWAY_FROM_ZERO
+      ROUND_TO_NEAREST_TIES_TO_ZERO
+Type 'mode' followed by one of these long, capitalized names, with
+underscores, to change the round mode for the current stack.
+The default mode is ROUND_TO_NEAREST_TIES_TO_EVEN.
+Type the name of a mode to get more information about how it works.
+%
+
+#stack
+   stack:
+This calculator provides four working stacks, numbered 0 to 3. Each stack has
+its own rounding mode. Type 'stack #', where # is a stack number, to change
+the current working stack.
+%
+
+#pushto
+   pushto:
+Pushes a copy of the top of the current stack to any other stack.
+Type 'pushto #', where # is the number of the stack you wish to push the value
+to. Pushing to the current stack is valid.
+%
+
+#popto
+   popto:
+Pops the top of the current stack and pushes its value to any other stack.
+Type 'popto #', where # is the number of the stack you wish to push the value
+to. Popping to the current stack is valid, and results in no change to the
+current stack.
+%
+
+#pushfrom
+   pushfrom:
+Pushes a value from the top any other stack onto the current stack, without
+popping that value from its stack.
+Type 'pushfrom #', where # is the number of the stack you wish to push the
+value from. Pushing from the current stack is valid, and the result is the
+same as typing 'copy'.
+%
+
+#popfrom
+   popfrom:
+Pushes a value from the top any other stack onto the current stack, popping
+that value from its stack.
+Type 'popfrom #', where # is the number of the stack you wish to pop the
+value from. Popping from the current stack is valid, and results in no change
+to the current stack.
+%
+
+#pi
+   pi:
+Pi, the ratio of the circumference of a circle to its diameter, to 32 digits
+of precision. Accurate to +- 1 ULP (Unit in the Last Place).
+%
+
+#Pi
+   Pi:
+Pi, the ratio of the circumference of a circle to its diameter, to 128 digits
+of precision. Accurate to +- 1 ULP (Unit in the Last Place).
+%
+
+#PI
+   PI:
+Pi, the ratio of the circumference of a circle to its diameter, to 256 digits
+of precision. Accurate to +- 1 ULP (Unit in the Last Place).
+%
+
+
+
+#ROUND_TO_NEAREST_TIES_TO_EVEN
+   ROUND_TO_NEAREST_TIES_TO_EVEN:
+Like the rounding one probably learned in school, but with one small
+difference. If the digit rounded at is > 5, then the digit rounded at is
+rounded up (away from zero). If the digit rounded at is 5, then the digit
+rounded to is rounded to the even number.
+Examples:
+   -2.6        -3
+   -2.4   ->   -2
+   -2.5        -2
+    3.4         3
+    3.5   ->    4
+    3.8         4
+%
+
+#ROUND_TO_POSITIVE_INFINITY
+   ROUND_TO_POSITIVE_INFINITY:
+This is also called ceiling, if the digit rounded at is non-zero, and the
+number is positive, then the digit rounded to is rounded up (away from zero).
+Examples:
+   -2.4        -2
+    2.0   ->    2
+    2.1         3
+%
+
+#ROUND_TO_NEGATIVE_INFINITY
+   ROUND_TO_NEGATIVE_INFINITY:
+This is also called floor, if the digit rounded at is non-zero, and the
+number is negative, then the digit rounded to is rounded up (away from zero).
+Examples:
+    2.4         2
+   -2.0   ->   -2
+   -2.1        -3
+%
+
+#ROUND_TO_ZERO
+   ROUND_TO_ZERO:
+This is also called truncate. The extra digits are just discarded.
+Examples:
+   2.5         2
+  -2.5   ->   -2
+%
+
+#ROUND_TO_NEAREST_TIES_AWAY_FROM_ZERO
+   ROUND_TO_NEAREST_TIES_AWAY_FROM_ZERO:
+This is the rounding mode one probably learned in school. If the digit rounded
+at is >= 5, then the digit rounded to is rounded up (away from zero).
+Examples:
+   -2.5       -3
+    2.5   ->   3
+    2.4        2
+    3.6        4
+%
+
+#ROUND_TO_NEAREST_TIES_TO_ODD
+   ROUND_TO_NEAREST_TIES_TO_ODD:
+This is an experimental mode made for symmetry with
+ROUND_TO_NEAREST_TIES_TO_EVEN. If the digit rounded at is > 5, then the digit
+rounded at is rounded up (away from zero). If the digit rounded at is 5, then
+the digit rounded to is rounded to the odd number.
+Examples:
+   -2.6        -3
+   -2.4   ->   -2
+   -2.5        -3
+    3.4         3
+    3.5   ->    3
+    3.8         4
+%
+
+#ROUND_AWAY_FROM_ZERO
+   ROUND_AWAY_FROM_ZERO:
+This is the opposite of truncate. If the digit rounded at is not zero, then
+round the digit rounded to up (away from zero).
+Examples:
+   2.5         3
+  -2.5   ->   -3
+%
+
+#ROUND_TO_NEAREST_TIES_TO_ZERO
+   ROUND_TO_NEAREST_TIES_TO_ZERO:
+This is an experimental mode made for symmetry with
+ROUND_TO_NEAREST_TIES_AWAY_FROM_ZERO. If the digit rounded at is > 5, then the
+digit rounded to is rounded up (away from zero).
+Examples:
+   -2.5       -2
+    2.5   ->   2
+    2.4        2
+    3.6        4
+%
+
+
+
+#exit
+   exit:
+exit and quit both terminate the main calculator.
+quit exits help.
+%
+
+
+
+&
+There is no help for that topic.
+%

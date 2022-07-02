@@ -1,0 +1,115 @@
+Tue Sep 06 20:30:42 MDT 2011 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Added expm1 to improve the accuracy of sinh.
+
+Tue Oct 05 21:09:28 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* HELPTEXT.txt: Proofing; finally added fact and rand.
+
+Mon Oct 04 19:36:55 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Fixed a bug in operator ^, which made it so that
+			 positive numbers to non-integral exponents were NaN.
+
+Sun Jul 25 18:36:36 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Fixed a bug in cosh.
+
+Thu Jul 22 13:58:22 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Fixed some logic, again. Damn coderot.
+			 Removed some extraneous variables that were holdovers
+			 from the Java version. Fixed some irregular code
+			 logic in places by changing construction from long
+			 double to construction from strings.
+			 Notably, moved sinh and cosh to their definitions
+			 via the exponential function. That should make them
+			 faster iff the argument's exponent > -4.
+
+			I have no need for lock() and unlock() now, but will
+			leave it in in case someone needs to shoot themselves
+			in the foot with it. Maybe, one day, I'll add that
+			IEEE 754 Exception handler that I won't use, too.
+
+Tue Jul 20 11:53:27 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Fixed some logic, I think, in sin and cos.
+			 I can't remember what I was doing there....
+			 Did I want to reduce before or after increasing the
+			 working precision? Reduce before, logic fixed.
+
+Tue Jul 13 10:42:12 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Float.cpp: Fixed incoherent logic in Frac, introduced in the
+		     previous "fix". The previous logic was "correct", but
+		     had an off-by-one bug. The "fix" didn't make sense a
+		     month later.
+
+Sun Jun 20 09:25:00 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Tried to improve sin and cos to handle multiples of
+			 pi / 2 without a kludge. Failed and removed kludge.
+	* Float.cpp: Fixed a terrible error in Frac that caused it to get
+		     stuck in an endless loop, triggered when the input is
+		     an integral value.
+
+Sat Jun 19 17:47:45 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Added handling of values close to multiples of pi
+			 being flushed to zero.
+
+Sun Jun  6 12:59:25 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Functions.cpp: Optimized the range reduction for the current
+			 extra precision in exp.
+	* Calculator.cpp: Added a direct set length command.
+
+Sat Jun  5 19:38:42 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Float.cpp: Made the conversion operator to long double actually
+		     work.
+
+Thu Jun  3 23:42:57 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Float.hpp: Friended exp.
+	* Functions.cpp: Modified exp to be faster.
+			 Removed unlock and lock from ln and exp.
+
+Wed Jun  2 13:02:20 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Constants.hpp: Changed M_SQRT10 to M_1_SQRT10.
+	* Constants.cpp: Added "E-1" to the M_SQRT10 constants to make them
+			 M_1_SQRT10.
+	* Functions.cpp: Changed a divide to a multiply in ln.
+			 Tried to change a divide to three multiplies in sqrt,
+			 found out that it was slower, so I returned to the
+			 older method and cleaned up sqrt.
+			 Added commentary to exp.
+
+Tue Jun  1 14:38:18 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Constants.hpp: Added M_SQRT10 in preparation for changing ln.
+	* Constants.cpp: Added M_SQRT10.
+	* Functions.cpp: Changed ln to hopefully be faster.
+	* main.cpp: Changed to reflect new version.
+
+Tue Jun  1 10:56:46 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* rand850.c: Removed rand850ul, as it is unused.
+	* rand850.h: Removed reference to rand850ul.
+	* Float.hpp: Made negate and abs return a reference to the modified
+		     Float to support code like var2 = var1.negate();, which
+		     would have been var1.negate(); var2 = var1;.
+	* Float.cpp: Updated negate and abs to match declaration.
+	* Functions.cpp: Updated cosh to take advantage of new declarations.
+	* Calculator.cpp: Used new declarations in calculator.
+	* Calculate.cpp: Used new declarations in calculator.
+
+Sat May 29 03:09:34 MDT 2010 Thomas <ricinwich@yahoo.com>
+
+	* Float.cpp: Added boolean functions isInteger, isOdd, and isEven
+		     to support a better ^ operator.
+	* Float.hpp: Added function declarations for added boolean functions.
+	* Functions.cpp: Improved the ^ operator's handling of negative
+			 numbers. Now it handles Odd, Integer exponents of
+			 negative numbers correctly.
