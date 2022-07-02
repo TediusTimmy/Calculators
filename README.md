@@ -25,6 +25,7 @@ I'm not going into division much: it is basically the division algorithm you can
 * 700, 300, 21
 * 400, 300, 22
 * 100, 300, 23
+
 We have successfully gotten to a result of 2.3. In practice, we add two guard digits to the operation: one in case we generate a leading zero (a case we can check for beforehand, but don't), and one to round the result on (we can interpret the remainder to do _correct_ rounding, but I didn't want to figure it out using `Column`s, and it needs that check for a leading zero).
 
 ## Calc4
