@@ -11,3 +11,9 @@ SlowCalc's concept of a number starts with the `Column`. The `Column` is a seque
 Upon `Column` is built `Float`, which is a collection of algorithms on `Columns` that implement the semantics of floating-point numbers. A `Float` is a `Column`, an integer exponent, and a flag (two) to indicate whether the `Float` is the special infinity value, or the special Not-A-Number value.
 
 The program demonstrates building arbitrary-precision floating-point numbers from basic types: booleans, characters, and integers.
+
+## Calc4
+
+Calc4 only marginally belongs here: it's `Float` is a wrapper over MPFR. It really only gives warm-fuzzies that other calculators are implemented correctly, by allowing one to compare the results with a library that is considered "good". It is always a good sign that nothing is amiss when multiple implementations of math agree on a result. A strange result can find corner cases in implemented algorithms in the math library, or find reliance on the treatment of corner cases in the algorithm being run.
+
+The nice thing about arbitrary-precision floating-point is that one can run an algorithm with increasing precision to brute-force away rounding errors and numerical instability. Remember, though, there are trade-offs. A rule-of-thumb is that software floating-point is ten times slower than hardware floating-point. At the same precision. Then, at least linearly scale the speed with the added precision: doubled precision is twice as slow or half as fast. It's worse if the algorithms have lots of multiplication and division, then quadratically scale the slowdown: doubled precision takes four times as long.

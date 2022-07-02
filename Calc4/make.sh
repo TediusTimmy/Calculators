@@ -1,0 +1,2 @@
+x86_64-w64-mingw32-g++.exe -Wall -Wextra -Wpedantic -Wconversion -o Calc4 -O6 -DUSE_RAND850 rand850.c DataHolder.cpp Float.cpp Functions.cpp Rand.cpp Stack.cpp Calculator.cpp main.cpp -lmpfr -lgmp
+x86_64-w64-mingw32-g++.exe -Wall -Wextra -Wpedantic -Wconversion -o Calc4_2 -O6 -DMODE_2 -DUSE_RAND850 rand850.c DataHolder.cpp Float.cpp Functions.cpp Rand.cpp Stack.cpp Calculator.cpp main.cpp -lmpfr -lgmp
