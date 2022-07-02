@@ -1,0 +1,1 @@
+x86_64-w64-mingw32-g++.exe -s -Wall -Wextra -Wpedantic -Wconversion -O6 -o AltCalc main.cpp Stack.cpp Calculator.cpp DecFloat.cpp Float.cpp Fixed.cpp Constants.cpp Functions.cpp Integer.cpp BitField.cpp

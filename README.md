@@ -28,6 +28,14 @@ I'm not going into division much: it is basically the division algorithm you can
 
 We have successfully gotten to a result of 2.3. In practice, we add two guard digits to the operation: one in case we generate a leading zero (a case we can check for beforehand, but don't), and one to round the result on (we can interpret the remainder to do _correct_ rounding, but I didn't want to figure it out using `Column`s, and it needs that check for a leading zero).
 
+## AltSlowCalc
+
+This was copied from my ArbitraryPrecision repository and checked with older sources that I have. The code has been reorganized to fit in one folder. There is something wrong in the math: try "PI shorten 1 copy / 2 * 20 pow print". This should give 1048576 with a lot of zeros, and if you leave out the "shorten 1", it does. If you use "Pi", you get the opposite: at length wrong, shortened right. For "pi", both are right.
+
+Anyway, this will be a fun adventure. Before I rewrote GNU bc to use GMP, I had already gone through the motions of building the logic that bc needed on the foundation of an arbitrary-precision integer library.
+
+TODO
+
 ## Calc4
 
 Calc4 only marginally belongs here: it's `Float` is a wrapper over MPFR. It really only gives warm-fuzzies that other calculators are implemented correctly, by allowing one to compare the results with a library that is considered "good". It is always a good sign that nothing is amiss when multiple implementations of math agree on a result. A strange result can find corner cases in implemented algorithms in the math library, or find reliance on the treatment of corner cases in the algorithm being run.
