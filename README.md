@@ -30,7 +30,7 @@ We have successfully gotten to a result of 2.3. In practice, we add two guard di
 
 ## AltSlowCalc
 
-This was copied from my ArbitraryPrecision repository and checked with older sources that I have. The code has been reorganized to fit in one folder. There is something wrong in the math: try "PI shorten 1 copy / 2 * 20 pow print". This should give 1048576 with a lot of zeros, and if you leave out the "shorten 1", it does. If you use "Pi", you get the opposite: at length wrong, shortened right. For "pi", both are right.
+This was copied from my ArbitraryPrecision repository and checked with older sources that I have. The code has been reorganized to fit in one folder. There was something wrong in the math: I was not correctly handling cases where the next digit approximation in division was the radix (or greater). Basically, my test case had during division a next digit approximation of 0x100000001, when the next digit was 0xFFFFFFFF; the approximation got truncated to 1 and thus my catastrophic loss of precision.
 
 Anyway, this will be a fun adventure. Before I rewrote GNU bc to use GMP, I had already gone through the motions of building the logic that bc needed on the foundation of an arbitrary-precision integer library.
 
@@ -42,11 +42,11 @@ Next up is the `Fixed` class, a fixed-point number class. The significand of a f
 
 Next, but mysteriously not finally, we have the `Float` class. It has a `Fixed` significand. It has a sign flag, an exponent field, and a flag for infinity or Not-A-Number. A disgusting amount of code in this class is devoted to handling zeros, NaNs, and infinities correctly.
 
-The final thing is the `DecFloat` class. This thing is responsible for enforcing limitations on precision and exponents. Some of the library routines make numbers with precision greater than is permitted by the library so that the result can be accurate (which isn't working correctly). Some terms in series we don't want to flush to zero when they could change the result. It is the hard separation between the developer of the floating-point library and the developer using the floating-point library.
+The final thing is the `DecFloat` class. This thing is responsible for enforcing limitations on precision and exponents. Some of the library routines make numbers with precision greater than is permitted by the library so that the result can be accurate. Some terms in series we don't want to flush to zero when they could change the result. It is the hard separation between the developer of the floating-point library and the developer using the floating-point library.
 
 ## AltCalc5Slimmed
 
-At some point, I merged the `Float` and `DecFloat` classes and changed the semantics of the `Fixed` class to produce this. It has the same math problem as AltSlowCalc. It really looks as though I have a catastrophic loss of precision somewhere. It also rips out everything from `BitField`, `Integer`, and `Fixed` that isn't used to construct `Float`.
+At some point, I merged the `Float` and `DecFloat` classes and changed the semantics of the `Fixed` class to produce this. It also rips out everything from `BitField`, `Integer`, and `Fixed` that isn't used to construct `Float`.
 
 ## Calc4
 
