@@ -34,7 +34,19 @@ This was copied from my ArbitraryPrecision repository and checked with older sou
 
 Anyway, this will be a fun adventure. Before I rewrote GNU bc to use GMP, I had already gone through the motions of building the logic that bc needed on the foundation of an arbitrary-precision integer library.
 
-TODO
+We'll start at the base of the class hierarchy: `BitField`. The `BitField` class represents an arbitrarily-large Whole number. It can be zero or some positive value. It differs from a `Column` in these important ways: it is of completely dynamic size, and it operates on digits in base 4294967296. That's 2^32, or four bytes. The interesting thing is that addition and subtraction are almost exactly the same: we don't need to add or subtract the base on borrow/carry out, and we shift the result to get the carry. The only other notable thing that the `BitField` class provides are tools for implementing multiplication and printing out numbers: multiplication by a single "digit", and division by a single "digit".
+
+Upon `BitField` is built the `Integer` class. This is a fully-independent arbitrarily-large integer (it was designed to stand alone). It adds a sign flag and implements algorithms to turn a Whole number into an Integer.
+
+Next up is the `Fixed` class, a fixed-point number class. The significand of a floating-point number is just a fixed-point number, so I implemented this class to hide that layer of operations (the scaled integer math) from the floating-point class. This is just algorithms that wrap integers, and is composed of an `Integer` that stores the digits, and a precision field that says where the decimal point is.
+
+Next, but mysteriously not finally, we have the `Float` class. It has a `Fixed` significand. It has a sign flag, an exponent field, and a flag for infinity or Not-A-Number. A disgusting amount of code in this class is devoted to handling zeros, NaNs, and infinities correctly.
+
+The final thing is the `DecFloat` class. This thing is responsible for enforcing limitations on precision and exponents. Some of the library routines make numbers with precision greater than is permitted by the library so that the result can be accurate (which isn't working correctly). Some terms in series we don't want to flush to zero when they could change the result. It is the hard separation between the developer of the floating-point library and the developer using the floating-point library.
+
+## AltCalc5Slimmed
+
+At some point, I merged the `Float` and `DecFloat` classes and changed the semantics of the `Fixed` class to produce this. It has the same math problem as AltSlowCalc. It really looks as though I have a catastrophic loss of precision somewhere. It also rips out everything from `BitField`, `Integer`, and `Fixed` that isn't used to construct `Float`.
 
 ## Calc4
 
