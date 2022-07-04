@@ -2,6 +2,8 @@
 
 I saw One Lone Coder's video about fixed-point numbers (https://www.youtube.com/watch?v=ZMsrZvBmQnU), and I wanted to share some calculators that I have created that construct floating-point numbers from operations on `int`s and `char`s. I will fill this out later as I go through my garbage to find them.
 
+One thing that I need to note: if you couldn't tell by the copyright dates, much of this code precedes C++11. In fact, all of it was written using a version of GCC where the features of C++11 were enabled by the flag `--std=c++0x`. If you are wondering why I rolled my own reference-counting classes: I didn't know `<tr1/memory>` existed, and wouldn't have brought in Boost.
+
 ## SlowCalc
 
 SlowCalc started as a Winter-break project in college in Java. I had a class that possibly would have some programming tasks in Java (it actually didn't) in the Spring, so I made a calculator in Java to learn some fundamentals of the language. I had been playing around with Analytical Engine emulations, and the floating-point representation immediately follows from those. Also that Spring semester, I took a C++ course, and decided to rewrite the calculator I had written over the Winter as a C++ program for that class's course project. I haven't changed the code from where I left it in 2010: I'm proud that such old code compiles with six warnings and seems to run fine.
