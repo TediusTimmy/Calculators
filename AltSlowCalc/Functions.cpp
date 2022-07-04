@@ -402,15 +402,18 @@ namespace BigInt
       base.changePrecision(base.getPrecision() + DERIVEDEXTRA);
       exponent.changePrecision(exponent.getPrecision() + DERIVEDEXTRA);
 
-      exponent = log(base) * exponent;
       if (left.isSigned())
        {
          base.abs();
+         exponent = log(base) * exponent;
          if (right.isOdd()) res = -exp(exponent);
          else res = exp(exponent);
        }
       else
+       {
+         exponent = log(base) * exponent;
          res = exp(exponent);
+       }
 
       return res;
     }
