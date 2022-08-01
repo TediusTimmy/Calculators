@@ -609,8 +609,8 @@ namespace DecFloat
          if (Exponent > right.Exponent) return -1;
          return 1;
        }
-      else if (!Significand.sign() && right.Significand.sign()) return -1;
-      else if (Significand.sign() && !right.Significand.sign()) return 1;
+      else if (!Significand.sign() && right.Significand.sign()) return 1;
+      else if (Significand.sign() && !right.Significand.sign()) return -1;
       else
        {
          if (Exponent > right.Exponent) return 1;
@@ -681,7 +681,7 @@ namespace DecFloat
          else if (left.isInfinity()) return !left.sign();
          else return !right.sign();
        }
-      if (left.isZero() && right.isZero()) return false;
+      if (left.isZero() && right.isZero()) return true;
       return (left.compare(right) >= 0);
     }
 
@@ -717,7 +717,7 @@ namespace DecFloat
          else if (left.isInfinity()) return left.sign();
          else return right.sign();
        }
-      if (left.isZero() && right.isZero()) return false;
+      if (left.isZero() && right.isZero()) return true;
       return (left.compare(right) <= 0);
     }
 
