@@ -1,0 +1,95 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+dim diskNames [33]
+
+function hanoi ( disk ; src ; dest ; temp )
+
+   if disk = 1 then
+      call print ("Move disk " ## diskNames[disk] ## " from peg " ## src ## " to peg " ## dest ## eolstr())
+   else
+      call hanoi ( disk - 1 ; src ; temp ; dest )
+      call print ("Move disk " ## diskNames[disk] ## " from peg " ## src ## " to peg " ## dest ## eolstr())
+      call hanoi ( disk - 1 ; temp ; dest ; src )
+   end if
+
+   return
+end function
+
+function program ( arg )
+   dim num
+
+   if size(arg) < 1 then
+      call print ("Hanoi number_of_disks" ## eolstr())
+      return
+   end if
+
+   num = val(arg[0])
+
+   if num > 32 or num < 1 then
+      call print ("Number of disks must be > 0 and < 33" ## eolstr())
+      return
+   end if
+
+   diskNames[ 1] = " 1"
+   diskNames[ 2] = " 2"
+   diskNames[ 3] = " 3"
+   diskNames[ 4] = " 4"
+   diskNames[ 5] = " 5"
+   diskNames[ 6] = " 6"
+   diskNames[ 7] = " 7"
+   diskNames[ 8] = " 8"
+   diskNames[ 9] = " 9"
+   diskNames[10] = "10"
+   diskNames[11] = "11"
+   diskNames[12] = "12"
+   diskNames[13] = "13"
+   diskNames[14] = "14"
+   diskNames[15] = "15"
+   diskNames[16] = "16"
+   diskNames[17] = "17"
+   diskNames[18] = "18"
+   diskNames[19] = "19"
+   diskNames[20] = "20"
+   diskNames[21] = "21"
+   diskNames[22] = "22"
+   diskNames[23] = "23"
+   diskNames[24] = "24"
+   diskNames[25] = "25"
+   diskNames[26] = "26"
+   diskNames[27] = "27"
+   diskNames[28] = "28"
+   diskNames[29] = "29"
+   diskNames[30] = "30"
+   diskNames[31] = "31"
+   diskNames[32] = "32"
+
+   call hanoi ( num ; "A" ; "B" ; "C" )
+
+   return
+end function

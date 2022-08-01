@@ -59,3 +59,9 @@ The nice thing about arbitrary-precision floating-point is that one can run an a
 ## AC6 and AC6S
 
 These are versions of AltSlowCalc and AltCalc5Slimmed that have been converted to use GMP as their arbitrary-precision integer library. From testing this, it was obvious that the culprit in the aforementioned numerical issues is the `Integer`/`BitField` classes. I mis-handled an edge case in division, **AGAIN**. This is the nice thing about doing the math in multiple ways: finding where the source of an issue is. When I switch out the BigInt library, the Float library built upon it starts producing consistent results. Progress.
+
+# DUMBBASIC 14
+
+I decided to add the mythical DUMBBASIC 14 to this repo. I've talked about it in other places. As I said before: it is written to C++03, and there are some interesting choices because of that. It actually didn't compile with a modern C++ compiler: the construct `#define CATSTR(x) "1"x"2"` is no longer valid C++, and the compiler complains that x"2" is a conversion operator to "1". As such, I also decided to fix the constant bug and clean up warnings. The DB14IN uses an interpreter pattern to interpret the code, while DB14VM compiles to virtual instructions. The version of the interpreter chosen has extra functions that support adding to the program during runtime, and the DBbc program was made to have a bc-like REPL.
+
+I must note two example programs: FiveSixSevenEight.txt and KahanTest.txt. I think that it is very important that one understands what their outputs tell you.

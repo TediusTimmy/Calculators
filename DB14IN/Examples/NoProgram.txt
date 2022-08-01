@@ -1,0 +1,11 @@
+//declare program ( args )
+//declare dogs ( )
+
+function cats ( )
+   return
+end function
+
+//function program ( args )
+//   call dogs ( )
+//   return
+//end function

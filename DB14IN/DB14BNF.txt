@@ -1,0 +1,130 @@
+<program>	=>	<constants> <globals> <functions>
+
+<constants>	=>	{ "const" <identifier> <assign> <const_expr> <nl> }
+
+<globals>	=>	{ "dim" <identifier> { "[" <const_expr> "]" }
+				{ ";" <identifier> { "[" <const_expr> "]" } } <nl> }
+
+<variables>	=>	{ "dim" [ "static" ] <identifier> { "[" <const_expr> "]" }
+				{ ";" [ "static" ] <identifier> { "[" <const_expr> "]" } } <nl> }
+
+<functions>	=>	<function_def> <nl> <functions>
+			""
+
+<function_def>	=>	"function" <identifier> "(" <params> ")" <nl>
+				<variables> <statements>
+				"end" "function"
+			"declare" <identifier> "(" <params> ")"
+
+<params>	=>	[ <identifier> { ";" <identifier> } ]
+
+<statements>	=>	<statement> <nl> <statements>
+			""
+
+<statement>	=>	<location> <assign> <expression>
+			"if" <expression> "then" <nl> <statements>
+				{ "else" "if" <expression> "then" <nl> <statements> }
+				[ "else" <nl> <statements> ]
+				("end if" | "fi")
+			"if" <expression> "then" <statement> [ "else" <statement> ]
+			[ ":" <identifier> ":" ]
+				"do" [ ( "while" | "until" ) <expression> ] <nl> 
+				<statements>
+				"loop" [ ( "while" | "until" ) <expression> ]
+			"break" [ ":" <label> ":" ]
+			"continue" [ ":" <label> ":" ]
+			( "while" | "until" ) [ ":" <label> ":" ] <expression> <nl>
+			[ ":" <identifier> ":" ]
+				"for" <location> <assign> <expression>
+				( "to" | "downto" ) <expression>
+				[ "step" <expression> ] <nl>
+				<statements>
+				( "next" | "end" "for" )
+			"select" <expression> <nl>
+				{ [ "and" ] "case" <expression> <nl> <statements> }
+				[ [ "and" ] "case" "else" <nl> <statements> ]
+				"end" "select"
+
+			"return" [ <expression> ]
+			"tailcall" <arguments>
+			"call" <function> "(" <arguments> ")"
+			""
+
+<nl>		=>	"//" .* "\n"
+			"\n"
+
+<identifier>	=>	<letter> { <letter> | <number> }
+
+<label>		=>	<identifier>
+
+<variable>	=>	<identifier>
+
+<function>	=>	<identifier>
+
+<location>	=>	<variable> { "[" <expression> "]" }
+
+<assign>	=>	"=" | ":=" | "<-"
+
+<expression>	=>	<boolean> { ( "|" | "\/" | "or" | "&" | "/\" | "and" ) <boolean> }
+
+<boolean>	=>	<clause> { ( "||" | "or" "else" ) <clause> }
+
+<clause>	=>	<predicate> { ( "&&" | "and" "then" ) <predicate> }
+
+<predicate>	=>	<relation> { <equivalence> <relation> }
+
+<equivalence>	=>	"=" | "==" | "#" | "<>" | "!="
+
+<relation>	=>	<shift> { <relate> <shift> }
+
+<relate>	=>	">=" | ">" | "<=" | "<"
+
+<shift>		=>	<simple> { ( "<<" | ">>" ) <simple> }
+
+<simple>	=>	<term> { ( "+" | "-" | "##" ) <term> }
+
+<term>		=>	<factor> { ( "*" | "/" | "%" ) <factor> }
+
+<factor>	=>	<primary> [("^" | "**") <factor>]
+
+<primary>	=>	( "+" | "-" | "!" | "not" ) <primary>
+			<constant>
+			<location>
+			"(" <expression> ")"
+			<function> "(" <arguments> ")"
+
+<const_expr>	=>	Any <expression> such that all <primary>s are not a <location>
+			or a <function> call.
+
+<arguments>	=>	[ <expression> { ";" <expression> } ]
+
+<constant>	=>	( <number>* ( "." | "," ) <number>+ | 
+			  <number>+ ( "." | "," ) <number>* )
+				[ "E" [ ( "+" | "-" ) ] <number>+ ]
+			<number>+
+			<identifier>
+			"'" [~\n]* "'"
+			'"' [~\n]* '"'
+
+<comment>	=>	^"#" .* "\n"
+			"(*" .* "*)"
+
+   break and continue with labels work as in Java
+   lines can be continued by ending them with a '\' before the newline
+      there must be no space between the '\' and the '\n'
+      this cannot be used in the middle of strings
+   lines that begin with a '#' are comment lines
+      the FIRST byte of the line must be the '#'
+   SELECT is not a DUMBBASIC 11 SELECT: it is not a looping construct
+      break does not work within it as in C
+      the CASEs are breaking, use "and case" to make them non-breaking
+         that is the word "and" and not "&&" or "/\"
+         this is a better solution than adding "choice" and "default"
+   according to Wikipedia, the logicals in one of the ALGOL languages
+      used the proper notation for those operations,
+      which is how the useless '\' got to be on the keyboard:
+      so they could be built as digraphs: '/\' and '\/'
+      I have incorporated that history here
+      "and then" and "or else" are the short-circuit logicals from Ada
+   '>>' and '<<' are simple division/multiplication by powers of 2.
+   '##' is string concatenation

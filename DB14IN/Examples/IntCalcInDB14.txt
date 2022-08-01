@@ -1,0 +1,290 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+dim NextTok ; NextVal ; null
+
+declare expression ( )
+declare term ( )
+declare factor ( )
+declare primary ( )
+declare GNT ( )
+
+declare intstr ( x )
+
+function max ( x ; y )
+   if x > y then return x
+   return y
+end function
+
+
+function equation ( )
+   dim result
+   result =  expression ()
+   if isnull(result) then return null
+
+   if NextTok # ';' then
+      call print ("Expected: ';', found " ## NextTok ## eolstr())
+      return null
+   fi
+
+   return result
+end function
+
+
+function expression ( )
+   dim lhs ; op ; rhs
+   lhs = term ()
+   if isnull(lhs) then return null
+
+   do while NextTok = '+' || NextTok = '-'
+      op = NextTok
+
+      call GNT ()
+
+      rhs = term ()
+      if isnull(rhs) then return null
+
+      select op
+         case '+'
+            lhs = reprec(lhs; max(len(intstr(+lhs)) ; len(intstr(+rhs))) + 1) + rhs
+         case '-'
+            lhs = reprec(lhs; max(len(intstr(+lhs)) ; len(intstr(+rhs))) + 1) - rhs
+      end select
+   loop
+
+   return lhs
+end function
+
+
+function term ( )
+   dim lhs ; op ; rhs
+   lhs = factor ()
+   if isnull(lhs) then return null
+
+   do while NextTok = '*' || NextTok = '/' || NextTok = '%'
+      op = NextTok
+
+      call GNT ()
+
+      rhs = factor ()
+      if isnull(rhs) then return null
+
+      select op
+         case '*'
+            lhs = reprec(lhs; len(intstr(+lhs)) + len(intstr(+rhs))) * rhs
+         case '/'
+            if rhs # 0 then
+               if rhs > 0 then
+                  lhs = floor ( lhs / rhs )
+               else
+                  lhs = ceil ( lhs / rhs )
+               end if
+            else
+               lhs = 0
+            end if
+         case '%'
+            if rhs # 0 then
+               if rhs > 0 then
+                  lhs = lhs - floor ( lhs / rhs ) * rhs
+               else
+                  lhs = lhs - ceil ( lhs / rhs ) * rhs
+               end if
+            end if
+      end select
+   loop
+
+   return lhs
+end function
+
+
+function factor ( )
+   dim lhs ; op ; rhs
+   lhs = primary ()
+   if isnull(lhs) then return null
+
+   if NextTok = '^' then
+      call GNT ()
+
+      rhs = factor ()
+      if isnull(rhs) then return null
+
+      lhs = trunc(reprec(lhs; len(intstr(+lhs)) * +rhs) ^ rhs)
+   fi
+
+   return lhs
+end function
+
+
+function primary ( )
+   dim result
+   select NextTok
+      case '+'
+         call GNT ()
+
+         result = primary ()
+         if isnull(result) then return null
+
+         if result < 0 then result = -result
+      case '-'
+         call GNT ()
+
+         result = primary ()
+         if isnull(result) then return null
+         result = -result
+      case '('
+         call GNT ()
+
+         result = expression ()
+         if isnull(result) then return null
+
+         if NextTok # ')' then
+            call print ("Expected: ')'" ## eolstr())
+            return null
+         fi
+         call GNT ()
+      case 'I'
+         result = NextVal
+         call GNT ()
+      case '#'
+         return null
+      case else
+         call print ("Expected: primary expression, found " ## NextTok ## eolstr())
+         return null
+   end select
+
+   do while NextTok = '!'
+      call GNT ()
+      if result < 0 then
+         result = 0
+      else
+         result = gamma (reprec(result; result * len(intstr(result))) + 1)
+      end if
+   loop
+
+   return result
+end function
+
+
+function GNT ( )
+   dim static A
+   if isnull (A) then A = inchr()
+   do while A = ' ' || A = chr(9) || A = chr(10)
+      A = inchr()
+      if isnull(A) then
+         NextTok = '#'
+         return
+      end if
+   loop
+   select A
+      and case '+'
+      and case '-'
+      and case '*'
+      and case '/'
+      and case '%'
+      and case '^'
+      and case '('
+      and case ')'
+      and case '!'
+      and case ';'
+      and case '#'
+         NextTok = A
+         A = null
+      case '0'
+      and case '1'
+      and case '2'
+      and case '3'
+      and case '4'
+      and case '5'
+      and case '6'
+      and case '7'
+      and case '8'
+      and case '9'
+         NextTok = 'I'
+         NextVal = asc(A) - asc('0')
+         A = inchr()
+         do while A >= '0' && A <= '9'
+            NextVal = NextVal * 10 + asc(A) - asc('0')
+            A = inchr()
+         loop
+      case else
+         A = null
+   end select
+
+   return
+end function
+
+
+function intstr ( x )
+   dim signstr; counter; exponent
+   if x < 0 then
+      signstr = "-"
+      x = -x
+   else
+      signstr = ""
+   fi
+
+   x = str(x)
+   x = leftstr(x; 1) ## midstr(x; 2; len(x))
+
+   counter = 2
+   do
+      exponent = rightstr(x; counter)
+   while leftstr(exponent; 1) <> "E"
+      counter = counter + 1
+   loop
+   x = leftstr(x; len(x) - counter)
+
+   exponent = val(midstr(exponent; 1; len(exponent)))
+
+   if exponent < 0 then return "0"
+
+   do while exponent >= len(x)
+      x = x ## '0'
+   loop
+
+   return signstr ## leftstr(x; exponent + 1)
+end function
+
+
+function program ( )
+   dim result
+   do
+      call GNT ()
+
+      result = equation ()
+      if not isnull(result) then
+         call print(intstr(result) ## eolstr())
+      else
+         if NextTok = '#' then break
+         do while NextTok # ';'
+            call GNT ()
+         loop
+      fi
+   loop
+   return
+end function

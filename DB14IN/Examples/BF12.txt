@@ -1,0 +1,134 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+function push_back ( array ; element )
+   dim newarray; counter
+
+   newarray = alloc(size(array) + 1)
+
+   for counter <- 0 to size(array) - 1
+      newarray[counter] = array[counter]
+   next
+
+   newarray[size(array)] = element
+
+   return newarray
+end function
+
+function program ( )
+
+dim Text;\
+    PC (* Program Counter *);\
+    WD (* While Depth *);\
+    DP (* Data Pointer *);\
+    Data;\
+    CI (* Current Instruction *);\
+    Temp
+
+call print ("Enter the program: " ## eolstr())
+Temp <- 1
+Text <- ""
+do while Temp
+   CI := inchr()
+   select CI
+      and case '+'
+      and case '-'
+      and case '<'
+      and case '>'
+      and case '['
+      and case ']'
+      and case ','
+      and case '.'
+         Text := Text ## CI
+      case '!'
+         Temp <- 0
+   end select
+loop
+
+//call print (Text ## eolstr())
+
+Data <- alloc(1)
+Data[0] <- 0
+PC <- 0
+DP <- 0
+do while PC < len(Text)
+   CI <- midstr(Text; PC; 1)
+   PC <- PC + 1
+
+   select CI
+      case '+'
+         Data[DP] = Data[DP] + 1
+         if Data[DP] > 255 then Data[DP] = 0
+      case '-'
+         Data[DP] = Data[DP] - 1
+         if Data[DP] < 0 then Data[DP] = 255
+      case '>'
+         DP = DP + 1
+         if DP == size(Data) then Data = push_back(Data ; 0)
+      case '<'
+         DP = DP - 1
+         if DP == -1 then
+            call print ("Data pointer moved past end of tape.")
+            return
+         fi
+      case ','
+         Data[DP] := asc(inchr())
+      case '.'
+         call print (chr(Data[DP]))
+      case '['
+         if not Data[DP] then
+            WD <- 1
+            do while WD
+               if midstr(Text; PC; 1) == '[' then
+                  WD <- WD + 1
+               else if midstr(Text; PC; 1) == ']' then
+                  WD <- WD - 1
+               end if
+               PC <- PC + 1
+            loop
+         fi
+      case ']'
+         if Data[DP] then
+            WD <- 1
+            PC <- PC - 1
+            do while WD
+               PC <- PC - 1
+               if midstr(Text; PC; 1) == ']' then
+                  WD <- WD + 1
+               else if midstr(Text; PC; 1) == '[' then
+                  WD <- WD - 1
+               end if
+            loop
+            PC <- PC + 1
+         end if
+   end select
+
+loop
+
+   return
+end function

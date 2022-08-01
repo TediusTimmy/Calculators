@@ -1,0 +1,4 @@
+function program ( )
+   call print ("Hello, World!" ## eolstr())
+   return
+end function

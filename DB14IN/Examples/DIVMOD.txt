@@ -1,0 +1,128 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+function intstr ( x )
+   dim signstr; counter; exponent
+   if x < 0 then
+      signstr = "-"
+      x = -x
+   else
+      signstr = ""
+   fi
+
+   x = str(x)
+   x = leftstr(x; 1) ## midstr(x; 2; len(x))
+
+   counter = 2
+   do
+      exponent = rightstr(x; counter)
+   while leftstr(exponent; 1) <> "E"
+      counter = counter + 1
+   loop
+
+   exponent = val(midstr(x; 1; len(exponent)))
+
+   if exponent < 0 then return "0"
+   return signstr ## leftstr(x; exponent + 1)
+end function
+
+//function away ( x )
+//   if x < 0 then return floor(x)
+//   return ceil(x)
+//end function
+
+function mystr ( x )
+   dim ret
+   if x < 0 then ret = intstr(x) else ret =  " " ## intstr(x)
+   if len(ret) < 5 then ret = spacestr(5 - len(ret)) ## ret
+   return ret
+end function
+
+function divmod ( x; y )
+   dim ret
+   ret = alloc(2)
+   if y > 0 then
+      ret[0] = floor(x / y)
+      ret[1] = x - ret[0] * y
+   else
+      ret[0] = ceil(x / y)
+      ret[1] = x - ret[0] * y
+   fi
+//   if ret[1] < 0 then
+//      ret[1] = ret[1] + +y
+// For trunc, ret[0] = ret[0] + sign(ret[0])
+//      ret[0] = ret[0] + 1
+//   fi
+   return ret
+end function
+
+function printsky ( x; y )
+   dim r
+   r = x / y
+   call print (mystr(floor(r)) ## "," ## mystr(x - floor(r) * y) ## "  ")
+   call print (mystr(ceil(r)) ## "," ## mystr(x - ceil(r) * y) ## "  ")
+   call print (mystr(away(r)) ## "," ## mystr(x - away(r) * y) ## "  ")
+   call print (mystr(trunc(r)) ## "," ## mystr(x - trunc(r) * y) ## "  ")
+   call print (mystr(round(r)) ## "," ## mystr(x - round(r) * y) ## "  ")
+   call print (mystr(divmod(x; y)[0]) ## "," ## mystr(divmod(x; y)[1]))
+   call print (eolstr())
+   return
+end function
+
+function program ( )
+   dim x; y
+
+   call print ("            Floor         Ceil         Away        Trunc        Round       Euclid" ## eolstr())
+   call print (" 7/ 3 ")
+   call printsky (7; 3)
+
+   call print ("-7/ 3 ")
+   call printsky (-7; 3)
+
+   call print (" 7/-3 ")
+   call printsky (7; -3)
+
+   call print ("-7/-3 ")
+   call printsky (-7; -3)
+   call print (eolstr())
+
+   call print (" 8/ 3 ")
+   call printsky (8; 3)
+
+   call print ("-8/ 3 ")
+   call printsky (-8; 3)
+
+   call print (" 8/-3 ")
+   call printsky (8; -3)
+
+   call print ("-8/-3 ")
+   call printsky (-8; -3)
+   call print (eolstr())
+
+   return
+end function

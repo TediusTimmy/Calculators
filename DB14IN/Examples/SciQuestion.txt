@@ -1,0 +1,93 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+function push_back ( array ; element )
+   dim newarray; counter
+   newarray = resize(array; size(array) + 1)
+   newarray[size(array)] = element
+   return newarray
+end function
+
+function decide ( x )
+   if (rand() > (1 / x)) then return 0.0
+   return 1.0
+end function
+
+function count ( x )
+   dim counter
+   counter = 1
+   do while 0 == decide ( x )
+      counter = counter + 1
+   loop
+   return counter
+end function
+
+function mean ( sample )
+   dim sum; c
+   sum = 0
+   for c <- 0 to size(sample) - 1
+      sum = sum + sample[c]
+   next
+   return sum / reprec(size(sample); 8)
+end function
+
+function std_dev ( sample; in_mean )
+   dim temp; sum; c
+   sum = 0
+   for c <- 0 to size(sample) - 1
+      temp = sample[c] - in_mean
+      sum = sum + temp * temp
+   next
+   return sqrt(sum / (reprec(size(sample); 8) - 1))
+end function
+
+function program ( )
+   dim c; sum; this; all; devs
+   sum = 0
+   devs = alloc(0)
+   all = alloc(0)
+   for c <- 1 to 100000
+      this = count(25)
+//      call print(str(this) ## eolstr())
+      sum = sum + this
+//      all = push_back(all; this)
+      if (c / 10000) == floor(c / 10000) then
+//         devs = push_back(devs; std_dev(all; mean(all)))
+//         all = alloc(0)
+         all = push_back(all; sum / 10000)
+         sum = 0
+      end if
+   next
+//   call print("Mean: " ## str(sum / 100) ## eolstr())
+//   call print("Standard Deviation: " ## str(mean(devs)) ## eolstr())
+//   call print("Std Dev of Std Dev: " ## str(std_dev(devs; mean(devs))) ## eolstr())
+   this = mean(all)
+   call print("Mean: " ## str(this) ## eolstr())
+   call print("Standard Deviation: " ## str(std_dev(all; this)) ## eolstr())
+   return
+end function

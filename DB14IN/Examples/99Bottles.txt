@@ -1,0 +1,148 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+declare printBottles ( num )
+
+function program ( )
+   dim bottles
+   bottles <- 99
+   do while bottles > 0
+      call printBottles (bottles)
+      if bottles = 1 then
+         call print (" bottle of beer on the wall," ## eolstr())
+      else
+         call print (" bottles of beer on the wall," ## eolstr())
+      end if
+      call printBottles (bottles)
+      if bottles = 1 then
+         call print (" bottle of beer! Take it down, pass it around," ## eolstr())
+      else
+         call print (" bottles of beer! Take one down, pass it around," ## eolstr())
+      end if
+
+      bottles := bottles - 1
+
+      call printBottles (bottles)
+      if bottles = 1 then
+         call print (" bottle of beer on the wall!" ## stringstr(eolstr();2))
+      else
+         call print (" bottles of beer on the wall!" ## stringstr(eolstr();2))
+      end if
+   loop
+   return
+end function
+
+function printBottles ( num )
+   dim tens; ones
+   if num > 19 then
+      tens = floor(num / 10)
+      select tens
+         case 9
+            call print ("Ninety")
+         case 8
+            call print ("Eighty")
+         case 7
+            call print ("Seventy")
+         case 6
+            call print ("Sixty")
+         case 5
+            call print ("Fifty")
+         case 4
+            call print ("Forty")
+         case 3
+            call print ("Thirty")
+         case 2
+            call print ("Twenty")
+      end select
+      ones = num - floor(num / 10) * 10
+      select ones
+         case 9
+            call print ("-nine")
+         case 8
+            call print ("-eight")
+         case 7
+            call print ("-seven")
+         case 6
+            call print ("-six")
+         case 5
+            call print ("-five")
+         case 4
+            call print ("-four")
+         case 3
+            call print ("-three")
+         case 2
+            call print ("-two")
+         case 1
+            call print ("-one")
+      end select
+   else
+      select num
+         case 19
+            call print ("Nineteen")
+         case 18
+            call print ("Eighteen")
+         case 17
+            call print ("Seventeen")
+         case 16
+            call print ("Sixteen")
+         case 15
+            call print ("Fifteen")
+         case 14
+            call print ("Fourteen")
+         case 13
+            call print ("Thirteen")
+         case 12
+            call print ("Twelve")
+         case 11
+            call print ("Eleven")
+         case 10
+            call print ("Ten")
+         case 9
+            call print ("Nine")
+         case 8
+            call print ("Eight")
+         case 7
+            call print ("Seven")
+         case 6
+            call print ("Six")
+         case 5
+            call print ("Five")
+         case 4
+            call print ("Four")
+         case 3
+            call print ("Three")
+         case 2
+            call print ("Two")
+         case 1
+            call print ("One")
+         case 0
+            call print ("No more")
+      end select
+   end if
+   return
+end function

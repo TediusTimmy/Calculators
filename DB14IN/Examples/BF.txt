@@ -1,0 +1,237 @@
+(*
+Copyright (c) 2014 Thomas DiModica.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+3. Neither the name of Thomas DiModica nor the names of other contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THOMAS DIMODICA AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THOMAS DIMODICA OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+*)
+function push_back ( array ; element )
+   dim newarray; counter
+
+   newarray = resize(array; size(array) + 1)
+
+   newarray[size(array)] = element
+
+   return newarray
+end function
+
+function create_struct ( type ; number )
+   dim ret
+
+   ret = alloc(2)
+
+   ret[0] = type
+   ret[1] = number
+
+   return ret
+end function
+
+// Returns a 2 element array,
+// First element is the compiled result
+// Second element is the remaining string
+function compile ( string )
+   dim ret; temp; chain
+
+   if len(string) > 0 then
+
+      chain = alloc(0)
+
+      do while len(string) > 0
+
+         temp = create_struct(midstr(string; 0; 1); 1)
+
+         select temp[0]
+            case "["
+               string = midstr(string; 1; len(string))
+
+               temp[1] = compile (string)
+
+               if isnull(temp[1]) then call print ("Unmatched '['" ## eolstr())
+
+               string = temp[1][1]
+               temp[1] = temp[1][0]
+
+               if (len(string) == 0) || (midstr(string; 0; 1) != ']') then call print ("Unmatched '['" ## eolstr())
+
+               string = midstr(string; 1; len(string))
+
+            case "]"
+               ret = create_struct(chain; string)
+               return ret
+
+            case "+"
+            and case "-"
+            and case ">"
+            and case "<"
+            and case "."
+            and case ","
+               do
+                  string = midstr(string; 1; len(string))
+               while (len(string) > 0) && (midstr(string; 0; 1) == temp[0])
+                  temp[1] = temp[1] + 1
+               loop
+         end select
+
+//         call print("Adding '" ## temp[0] ## "' : to chain." ## eolstr())
+
+         chain = push_back(chain; temp)
+
+      loop
+
+      ret = create_struct(chain; string)
+
+   end if
+
+   return ret
+end function
+
+function printProgram ( prog )
+   dim index; count
+   for index <- 0 to size(prog) - 1
+      select prog[index][0]
+         case '['
+            call print('[')
+            call printProgram(prog[index][1])
+            call print(']')
+         case '+'
+         and case '-'
+         and case '<'
+         and case '>'
+         and case '.'
+         and case ','
+            for count <- 1 to prog[index][1]
+               call print(prog[index][0])
+            next
+      end select
+   next
+   return
+end function
+
+// Recursive interpreter
+// Input state:
+//    Instruction List to Execute
+//    Tape
+//    Position in Tape
+// Return the ending state so the caller can grab the tape and data pointer.
+function interpret ( state )
+   dim index; newState; count
+
+//   call print ("In interpret!"##eolstr())
+   for index <- 0 to size(state[0]) - 1
+//      call print ("Doing select!"##eolstr())
+//      call print ("Instructions : " ## str(size(state[0])) ## eolstr())
+      select state[0][index][0]
+         case '['
+            if state[1][state[2]] then
+               newState = alloc(3)
+               newState[0] = state[0][index][1]
+               newState[1] = state[1]
+               newState[2] = state[2]
+
+               do while newState[1][newState[2]]
+                  newState = interpret(newState)
+               loop
+
+               state[1] = newState[1]
+               state[2] = newState[2]
+            end if
+         case '+'
+//            call print ("In plus!"##eolstr())
+            state[1][state[2]] = state[1][state[2]] + state[0][index][1]
+             // Make some poor assumptions, like there will never be 700 +s in a row.
+            if state[1][state[2]] > 255 then state[1][state[2]] = state[1][state[2]] - 256
+         case '-'
+            state[1][state[2]] = state[1][state[2]] - state[0][index][1]
+            if state[1][state[2]] < 0 then state[1][state[2]] = state[1][state[2]] + 256
+         case '<'
+            state[2] = state[2] - state[0][index][1]
+            if state[2] < 0 then
+               call print ("Data pointer moved past end of tape." ## eolstr())
+               return // return a null, causing things to go BOOM
+            fi
+         case '>'
+            state[2] = state[2] + state[0][index][1]
+            do while size(state[1]) <= state[2]
+               state[1] = push_back(state[1]; 0)
+            loop
+         case '.'
+            for count <- 1 to state[0][index][1]
+               call print(chr(state[1][state[2]]))
+            next
+         case ','
+            for count <- 1 to state[0][index][1]
+               state[1][state[2]] = asc(inchr())
+            next
+      end select
+   next
+
+   return state
+end function
+
+function program ( )
+   dim inprog; prog; tape; inchar; state
+
+   call print("Enter the program, followed by '!':" ## eolstr())
+
+   inchar = inchr()
+   inprog = ""
+   do while inchar != "!"
+      select inchar
+             case "+"
+         and case "-"
+         and case ">"
+         and case "<"
+         and case "["
+         and case "]"
+         and case "."
+         and case ","
+            inprog = inprog ## inchar
+      end select
+      inchar = inchr()
+   loop
+
+//   call print(inprog ## eolstr())
+
+   prog = compile(inprog)
+
+   if (prog[1] != "") then
+      call print ("Compile error. Most likely unmatched ']'."##eolstr())
+      return
+   end if
+
+//   call printProgram(prog[0])
+//   call print(eolstr())
+
+   tape = alloc(1)
+   tape[0] = 0
+
+   state = alloc(3)
+   state[0] = prog[0]
+   state[1] = tape
+   state[2] = 0
+
+   call interpret (state)
+
+   return
+end function

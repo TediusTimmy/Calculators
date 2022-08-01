@@ -1,0 +1,1 @@
+g++ -Wall -Wextra -Wpedantic -Wconversion ExpressionTest.cpp Parser.cpp SymbolTable.cpp StdLib.cpp Lexer.cpp ValueType.cpp StackMachine.cpp ../Calc4/DataHolder.cpp ../Calc4/Functions.cpp ../Calc4/Float.cpp ../Calc4/Rand.cpp ../Calc4/rand850.c -lmpfr -lgmp

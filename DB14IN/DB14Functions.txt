@@ -1,0 +1,83 @@
+DB14 Function List:
+
+	Standard Mathematical
+
+sin	sinh	atan2	sqrt	log10	pow	abs(no: +x is abs(x))
+cos	cosh	mac	cubrt	exp10	hypot	copysign	away(round)
+tan	tanh	log	sqr	round	expm1	neg(-abs)	sincos
+asin	asinh	exp	erf	floor	log1p	sign(-1:0:1)	lgamma
+acos	acosh	gamma	erfc	ceil	pi	reprec(change precision)
+atan	atanh	lngamma	frac	trunc	rand	isnan	isinf	roundeven(ties to even)
+
+sincos and lgamma return more than one value
+
+
+str	val			Convert number to string and string to number
+chr	asc			Convert 'character' to character code and character code to string of length 1
+
+date	time			Get date and time as string (YYYY-MM-DD and HH:MM:SS)
+
+ucase	lcase	ltrim	rtrim	Change string case and strip spaces
+midstr	leftstr	rightstr	Grab an arbitrary portion of a string
+spacestr	stringstr	Build a string of spaces or arbitrary character
+eolstr				Takes no arguments and returns a string of the end-of-line marker.
+
+print	instr	inchr		Print String. Input next line or next character.
+
+isstr	isval	isarray	isnull	Determine if a value is a string, number, array, or uninitialized.
+size	len	prec		Get size of array. Length of String. Precision of Number.
+alloc				Return an array with arg elements.
+resize				Change the number of elements of an array.
+getrnd	setrnd			Get and set the round mode.
+getflags	setflags	Get and set the floating point flags.
+
+
+Math: (42)
+	sin	sinh	atan2	sqrt	log10	pow	neg
+	cos	cosh	mac	cubrt	exp10	hypot	copysign
+	tan	tanh	log	sqr	round	expm1	roundeven
+	asin	asinh	exp	erf	floor	log1p	away
+	acos	acosh	gamma	erfc	ceil	rand	sincos
+	atan	atanh	lngamma	frac	trunc	sign	lgamma
+Constants: (1)
+	pi
+String: (16)
+	str	val	ucase	lcase	ltrim	rtrim	spacestr
+	midstr	leftstr	eolstr	rightstr	stringstr
+	chr	asc	date	time
+IO: (3)
+	print	instr	inchr
+RTTI: (4)
+	isstr	isval	isarray	isnull
+Object Creation: (1)
+	alloc
+Meta: (11)
+	getrnd	setrnd	size	len	prec	resize	reprec	isnan	isinf	getflags	setflags
+ 78 Functions
+
+
+No arg: (9)
+date	time	getrnd	instr	inchr	rand	eolstr	pi	getflags
+
+One arg: (58)
+sin	sinh	str	sqrt	log10	setrnd	chr	isinf	spacestr
+cos	cosh	val	cubrt	exp10	print	asc	isstr	isnan	lgamma
+tan	tanh	log	sqr	round	expm1	neg	isval	setflags
+asin	asinh	exp	erf	floor	log1p	sign	isarray	len	sincos
+acos	acosh	gamma	erfc	ceil	ucase	ltrim	isnull	prec	away
+atan	atanh	lngamma	frac	trunc	lcase	rtrim	alloc	size	roundeven
+
+Two Arg: (9)
+atan2	hypot	pow	reprec	resize	leftstr
+rightstr	copysign	stringstr
+
+Three arg: (2)
+mac	midstr
+
+
+Minimal Library Set: (24)
+	trunc (or frac)
+	midstr (actually, leftstr or rightstr)
+	chr (for arbitrary character values, like newline)
+   All Meta, Object Creation, RTTI, IO, and date and time. (21)
+	0:6	1:15	2:3
