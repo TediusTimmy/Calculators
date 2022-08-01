@@ -203,7 +203,7 @@ namespace BigInt
 ------------------------------------------------------------------------------
    NOTES:
       log(x) = 2 * sum (i = 1 to Inf)  of
-         (((i - 1) / (i + 1)) ^ (2 * i - 1)) / (2 * i - 1)
+         (((x - 1) / (x + 1)) ^ (2 * i - 1)) / (2 * i - 1)
 
       This started general-purpose, but the series for ln has poor
       convergence outside of (.5,2). Remove all areas labeled new code
