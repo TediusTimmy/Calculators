@@ -298,7 +298,7 @@ Expression * Parser::factor (CallingContext & context)
       ret->lineNo = nextToken.lineNumber;
       GNT();
 
-      ret->rhs = primary(context);
+      ret->rhs = factor(context);
     }
 
    if (true == ret.isNULL())

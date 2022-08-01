@@ -69,7 +69,7 @@ ConstantFunctionPointer CallingContext::getConstantFunction (const std::string &
    std::map<std::string, ConstantFunctionPointer>::iterator test (s_constantFunctions.find(name));
    if (s_constantFunctions.end() != test) return test->second;
 
-   DB_panic("INTERPRETER ERROR!!! : request for non existant standard function \"" + name + "\".");
+   DB_panic("INTERPRETER ERROR!!! : request for non existent standard function \"" + name + "\".");
  }
 
 UnaryFunctionPointer CallingContext::getUnaryFunction (const std::string & name)
@@ -77,7 +77,7 @@ UnaryFunctionPointer CallingContext::getUnaryFunction (const std::string & name)
    std::map<std::string, UnaryFunctionPointer>::iterator test (s_unaryFunctions.find(name));
    if (s_unaryFunctions.end() != test) return test->second;
 
-   DB_panic("INTERPRETER ERROR!!! : request for non existant standard function \"" + name + "\".");
+   DB_panic("INTERPRETER ERROR!!! : request for non existent standard function \"" + name + "\".");
  }
 
 BinaryFunctionPointer CallingContext::getBinaryFunction (const std::string & name)
@@ -85,7 +85,7 @@ BinaryFunctionPointer CallingContext::getBinaryFunction (const std::string & nam
    std::map<std::string, BinaryFunctionPointer>::iterator test (s_binaryFunctions.find(name));
    if (s_binaryFunctions.end() != test) return test->second;
 
-   DB_panic("INTERPRETER ERROR!!! : request for non existant standard function \"" + name + "\".");
+   DB_panic("INTERPRETER ERROR!!! : request for non existent standard function \"" + name + "\".");
  }
 
 TernaryFunctionPointer CallingContext::getTernaryFunction (const std::string & name)
@@ -93,7 +93,7 @@ TernaryFunctionPointer CallingContext::getTernaryFunction (const std::string & n
    std::map<std::string, TernaryFunctionPointer>::iterator test (s_ternaryFunctions.find(name));
    if (s_ternaryFunctions.end() != test) return test->second;
 
-   DB_panic("INTERPRETER ERROR!!! : request for non existant standard function \"" + name + "\".");
+   DB_panic("INTERPRETER ERROR!!! : request for non existent standard function \"" + name + "\".");
  }
 
 static std::map<std::string, ConstantFunctionPointer> createConstantFunctionsMap (void)

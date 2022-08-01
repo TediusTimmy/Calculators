@@ -48,7 +48,7 @@ ValueType::ValueHolder CallingContext::getValue (const std::string & name, size_
    test = m_globals.find(name);
    if (m_globals.end() != test) return test->second;
 
-   DB_panic("INTERPRETER ERROR!!! : getValue to non-existant variable", *this, lineNo);
+   DB_panic("INTERPRETER ERROR!!! : getValue to non-existent variable", *this, lineNo);
  }
 
 void CallingContext::setValue (const std::string & name, const ValueType::ValueHolder & value, size_t lineNo)
@@ -76,7 +76,7 @@ void CallingContext::setValue (const std::string & name, const ValueType::ValueH
       return;
     }
 
-   DB_panic("INTERPRETER ERROR!!! : setValue to non-existant variable", *this, lineNo);
+   DB_panic("INTERPRETER ERROR!!! : setValue to non-existent variable", *this, lineNo);
  }
 
 

@@ -287,7 +287,7 @@ void Parser::factor (CallingContext & context, InstructionStream & dest)
 
       GNT();
 
-      primary(context, dest);
+      factor(context, dest);
       push_back(dest, temp);
     }
  }
