@@ -250,8 +250,8 @@ namespace BigInt
          if (Exponent > to.Exponent) return -1;
          else return 1;
        }
-      else if (!Sign && to.Sign) return -1;
-      else if (Sign && !to.Sign) return 1;
+      else if (!Sign && to.Sign) return 1;
+      else if (Sign && !to.Sign) return -1;
       else
        {
          if (Exponent > to.Exponent) return 1;
