@@ -4,6 +4,8 @@ I saw One Lone Coder's video about fixed-point numbers (https://www.youtube.com/
 
 One thing that I need to note: if you couldn't tell by the copyright dates, much of this code precedes C++11. In fact, all of it was written using a version of GCC where the features of C++11 were enabled by the flag `--std=c++0x`. If you are wondering why I rolled my own reference-counting classes: I didn't know `<tr1/memory>` existed, and wouldn't have brought in Boost.
 
+Note August 2022: I found a bug in the comparison code that affects almost everything here. However, the bug would never be realized in any of these calculators, as the code in question isn't meaningfully exercised anywhere (hence why it took me so long to find).
+
 ## SlowCalc
 
 SlowCalc started as a Winter-break project in college in Java. I had a class that possibly would have some programming tasks in Java (it actually didn't) in the Spring, so I made a calculator in Java to learn some fundamentals of the language. I had been playing around with Analytical Engine emulations, and the floating-point representation immediately follows from those. Also that Spring semester, I took a C++ course, and decided to rewrite the calculator I had written over the Winter as a C++ program for that class's course project. I haven't changed the code from where I left it in 2010: I'm proud that such old code compiles with six warnings and seems to run fine.
@@ -65,3 +67,13 @@ These are versions of AltSlowCalc and AltCalc5Slimmed that have been converted t
 I decided to add the mythical DUMBBASIC 14 to this repo. I've talked about it in other places. As I said before: it is written to C++03, and there are some interesting choices because of that. It actually didn't compile with a modern C++ compiler: the construct `#define CATSTR(x) "1"x"2"` is no longer valid C++, and the compiler complains that x"2" is a conversion operator to "1". As such, I also decided to fix the constant bug and clean up warnings. The DB14IN uses an interpreter pattern to interpret the code, while DB14VM compiles to virtual instructions. The version of the interpreter chosen has extra functions that support adding to the program during runtime, and the DBbc program was made to have a bc-like REPL.
 
 I must note two example programs: FiveSixSevenEight.txt and KahanTest.txt. I think that it is very important that one understands what their outputs tell you.
+
+## DB14ACS
+
+This one uses the AltCalc5Slimmed number routines. Using these routines is _a lot_ slower, by several orders of magnitude. However, you also don't need GMP or MPFR. Moving to the AC6S Float should see a speed boost. But, why would you do this? Run FiveSixSevenEight.txt and understand the results.
+
+Okay, let me just spill it. FiveSixSevenEight is a program that tests the associativity of a math operation, and gives the precisions at which that math operation is associative. For binary floating point, the associativity is pretty random. The operation randomly fails to be associative at certain precisions. For decimal floating point, the associativity fails in one place: at nine digits of precision, where the ten digit result gets rounded differently depending on which multiplication happens first (this is serendipitous: it could fail at lower precisions, but this example does not; what is important is that it cannot fail at precisions greater than or equal to the number of digits in the product).
+
+KahanTest is a pathological function designed to have a catastrophic loss of precision.
+
+Making sure this version compiled correctly helped me find two bugs in the floating-point implementation: zero was not handled as being equal to itself in less than or equal and greater than or equal; and the signs of results were flipped in comparisons when the exponents were different and the signs are different. Neither of these bugs should ever have been exercised by the calculator programs. Their wrongness stretches all the way back to SlowCalc.

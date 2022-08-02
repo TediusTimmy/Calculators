@@ -1,0 +1,1 @@
+g++ -Wall -Wextra -Wpedantic -Wconversion ExpressionTest.cpp Parser.cpp SymbolTable.cpp StdLib.cpp Lexer.cpp Statement.cpp ValueType.cpp Expression.cpp ../AltCalc5Slimmed/Bitfield.cpp ../AltCalc5Slimmed/Integer.cpp ../AltCalc5Slimmed/Float.cpp ../AltCalc5Slimmed/Fixed.cpp ../AltCalc5Slimmed/Functions.cpp ../AltCalc5Slimmed/Constants.cpp Rand.cpp rand850.c Missing.cpp
