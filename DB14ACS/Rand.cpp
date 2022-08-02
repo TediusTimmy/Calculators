@@ -46,6 +46,7 @@ namespace BigInt
        }
 
       Float x (std::string(rand850s()) + "e-256");
+      x.normalize();
 
       return x;
     }

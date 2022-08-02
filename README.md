@@ -70,7 +70,7 @@ I must note two example programs: FiveSixSevenEight.txt and KahanTest.txt. I thi
 
 ## DB14ACS
 
-This one uses the AltCalc5Slimmed number routines. Using these routines is _a lot_ slower, by several orders of magnitude. However, you also don't need GMP or MPFR. Moving to the AC6S Float should see a speed boost. But, why would you do this? Run FiveSixSevenEight.txt and understand the results.
+This one uses the AltCalc5Slimmed number routines. Using these routines is _a lot_ slower, by an order or two of magnitude. However, you also don't need GMP or MPFR. Moving to the AC6S Float should see a speed boost. But, why would you do this? Run FiveSixSevenEight.txt and understand the results.
 
 Okay, let me just spill it. FiveSixSevenEight is a program that tests the associativity of a math operation, and gives the precisions at which that math operation is associative. For binary floating point, the associativity is pretty random. The operation randomly fails to be associative at certain precisions. For decimal floating point, the associativity fails in one place: at nine digits of precision, where the ten digit result gets rounded differently depending on which multiplication happens first (this is serendipitous: it could fail at lower precisions, but this example does not; what is important is that it cannot fail at precisions greater than or equal to the number of digits in the product).
 
