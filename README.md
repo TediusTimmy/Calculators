@@ -4,7 +4,7 @@ I saw One Lone Coder's video about fixed-point numbers (https://www.youtube.com/
 
 One thing that I need to note: if you couldn't tell by the copyright dates, much of this code precedes C++11. In fact, all of it was written using a version of GCC where the features of C++11 were enabled by the flag `--std=c++0x`. If you are wondering why I rolled my own reference-counting classes: I didn't know `<tr1/memory>` existed, and wouldn't have brought in Boost.
 
-Note August 2022: I found a bug in the comparison code that affects almost everything here. However, the bug would never be realized in any of these calculators, as the code in question isn't meaningfully exercised anywhere (hence why it took me so long to find).
+Note August 2022: I found a bug in the comparison code that affects almost everything here. However, the bug would never be realized in any of these calculators, as the code in question isn't meaningfully exercised anywhere (hence why it took me so long to find, see note at the bottom). Also, I updated the code to be truly 64-bit in the "Alt" calcs. Define `BIG_INT_QUAD_BYTE` to get the old behavior (it may not compile with a MS compiler).
 
 ## SlowCalc
 
@@ -76,4 +76,4 @@ Okay, let me just spill it. FiveSixSevenEight is a program that tests the associ
 
 KahanTest is a pathological function designed to have a catastrophic loss of precision.
 
-Making sure this version compiled correctly helped me find two bugs in the floating-point implementation: zero was not handled as being equal to itself in less than or equal and greater than or equal; and the signs of results were flipped in comparisons when the exponents were different and the signs are different. Neither of these bugs should ever have been exercised by the calculator programs. Their wrongness stretches all the way back to SlowCalc.
+Making sure this version compiled correctly helped me find two bugs in the floating-point implementation: zero was not handled as being equal to itself in less than or equal and greater than or equal; and the signs of results were flipped in comparisons when the exponents were different and the signs are different. Neither of these bugs should ever have been exercised by the calculator programs. Their wrongness stretches all the way back to SlowCalc. When I rewrote the logic from Java to C++, I seem to have "fixed" it, as the Java is correct and the earlier C code that the Java was based on is correct (the earlier Analytical Engine emulators were written in C, and their code structure follows from the physical description of the machine: a column of mechanical wheels labeled '0' to '9').

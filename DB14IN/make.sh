@@ -1,0 +1,1 @@
+x86_64-w64-mingw32-g++.exe -Wall -Wextra -Wpedantic -Wconversion -fno-rtti -O3 -s -o DBbc DBbc.cpp Parser.cpp SymbolTable.cpp StdLib.cpp Lexer.cpp Statement.cpp ValueType.cpp Expression.cpp ../Calc4/DataHolder.cpp ../Calc4/Functions.cpp ../Calc4/Float.cpp ../Calc4/Rand.cpp ../Calc4/rand850.c -lmpfr -lgmp

@@ -59,10 +59,18 @@ namespace BigInt
     */
 
 
+#ifdef BIG_INT_QUAD_BYTE
    const int BitField::bits = 32;
+#else /* BIG_INT_OCT_BYTE */
+   const int BitField::bits = 64;
+#endif /* BIG_INT_QUAD_BYTE */
    const static Unit mask = (Unit) /*(1 << BitField::bits)*/ - 1;
 
+#ifdef BIG_INT_QUAD_BYTE
    #define NEXT_TYPE long long
+#else /* BIG_INT_OCT_BYTE */
+   #define NEXT_TYPE __int128__
+#endif /* BIG_INT_QUAD_BYTE */
 
 
 
@@ -607,9 +615,9 @@ namespace BigInt
     {
       if (Zero) return -1;
 
-      int result = Data->Length * bits - 1;
+      long result = Data->Length * bits - 1;
 
-      for (Unit i = (1U << (bits - 1));
+      for (Unit i = (((Unit)1) << (bits - 1));
            !(Data->Data[Data->Length - 1] & i);
            i >>= 1, result--) ;
 
