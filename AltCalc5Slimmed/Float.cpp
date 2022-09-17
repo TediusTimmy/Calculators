@@ -106,7 +106,7 @@ namespace BigInt
             else return true;
           }
          else if (lhs.isInfinity()) return !lhs.isSigned();
-         else return !rhs.isSigned();
+         else return rhs.isSigned();
        }
       if (lhs.isZero() && rhs.isZero()) return false;
       return lhs.compare(rhs) > 0;
@@ -124,7 +124,7 @@ namespace BigInt
             else return false;
           }
          else if (lhs.isInfinity()) return lhs.isSigned();
-         else return rhs.isSigned();
+         else return !rhs.isSigned();
        }
       if (lhs.isZero() && rhs.isZero()) return false;
       return lhs.compare(rhs) < 0;
@@ -142,7 +142,7 @@ namespace BigInt
             else return true;
           }
          else if (lhs.isInfinity()) return !lhs.isSigned();
-         else return !rhs.isSigned();
+         else return rhs.isSigned();
        }
       if (lhs.isZero() && rhs.isZero()) return true;
       return lhs.compare(rhs) >= 0;
@@ -160,7 +160,7 @@ namespace BigInt
             else return false;
           }
          else if (lhs.isInfinity()) return lhs.isSigned();
-         else return rhs.isSigned();
+         else return !rhs.isSigned();
        }
       if (lhs.isZero() && rhs.isZero()) return true;
       return lhs.compare(rhs) <= 0;
@@ -176,8 +176,7 @@ namespace BigInt
 
    bool operator != (const Float & lhs, const Float & rhs)
     {
-      if (lhs.isNaN() && rhs.isNaN()) return true;
-      if (lhs.isNaN() || rhs.isNaN()) return false;
+      if (lhs.isNaN() || rhs.isNaN()) return true;
       if (lhs.isInfinity() || rhs.isInfinity()) return true;
       if (lhs.isZero() && rhs.isZero()) return false;
       return lhs.compare(rhs) != 0;

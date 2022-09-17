@@ -642,8 +642,7 @@ namespace DecFloat
 
    bool operator != (const Float & left, const Float & right)
     {
-      if (left.isNaN() && right.isNaN()) return true;
-      if (left.isNaN() || right.isNaN()) return false;
+      if (left.isNaN() || right.isNaN()) return true;
       if (left.isInfinity() || right.isInfinity()) return true;
       if (left.isZero() && right.isZero()) return false;
       return (left.compare(right) != 0);
@@ -661,7 +660,7 @@ namespace DecFloat
             else return true;
           }
          else if (left.isInfinity()) return !left.sign();
-         else return !right.sign();
+         else return right.sign();
        }
       if (left.isZero() && right.isZero()) return false;
       return (left.compare(right) > 0);
@@ -679,7 +678,7 @@ namespace DecFloat
             else return true;
           }
          else if (left.isInfinity()) return !left.sign();
-         else return !right.sign();
+         else return right.sign();
        }
       if (left.isZero() && right.isZero()) return true;
       return (left.compare(right) >= 0);
@@ -697,7 +696,7 @@ namespace DecFloat
             else return false;
           }
          else if (left.isInfinity()) return left.sign();
-         else return right.sign();
+         else return !right.sign();
        }
       if (left.isZero() && right.isZero()) return false;
       return (left.compare(right) < 0);
@@ -715,7 +714,7 @@ namespace DecFloat
             else return false;
           }
          else if (left.isInfinity()) return left.sign();
-         else return right.sign();
+         else return !right.sign();
        }
       if (left.isZero() && right.isZero()) return true;
       return (left.compare(right) <= 0);
