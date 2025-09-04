@@ -474,7 +474,7 @@ namespace BigInt
        }
       else
        {
-         temp = lhs.Exponent > rhs.Exponent ? lhs : rhs;
+         temp = lhs.Exponent > rhs.Exponent ? lhs : -rhs;
        }
 
       return temp;
